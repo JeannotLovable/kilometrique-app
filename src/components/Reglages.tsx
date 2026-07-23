@@ -19,12 +19,16 @@ interface FormBareme {
 
 export function Reglages({ parametres, onSave, onClose }: ReglagesProps) {
   const [anneeFiscale, setAnneeFiscale] = useState(parametres.anneeFiscale);
+  const [nomDeclarant, setNomDeclarant] = useState(parametres.nomDeclarant ?? '');
+  const [vehicule, setVehicule] = useState(parametres.vehicule ?? '');
   const [bareme, setBareme] = useState<FormBareme>(parametres.bareme);
   const [erreurs, setErreurs] = useState<string[]>([]);
   const [confirmation, setConfirmation] = useState(false);
 
   useEffect(() => {
     setAnneeFiscale(parametres.anneeFiscale);
+    setNomDeclarant(parametres.nomDeclarant ?? '');
+    setVehicule(parametres.vehicule ?? '');
     setBareme(parametres.bareme);
   }, [parametres]);
 
@@ -65,7 +69,12 @@ export function Reglages({ parametres, onSave, onClose }: ReglagesProps) {
       return;
     }
 
-    onSave({ anneeFiscale, bareme });
+    onSave({
+      anneeFiscale,
+      bareme,
+      nomDeclarant: nomDeclarant.trim() || undefined,
+      vehicule: vehicule.trim() || undefined,
+    });
     setErreurs([]);
     setConfirmation(true);
   };
@@ -97,6 +106,32 @@ export function Reglages({ parametres, onSave, onClose }: ReglagesProps) {
           step="1"
         />
       </div>
+
+      <fieldset className="bareme-fieldset">
+        <legend>Identité (pour l'export PDF)</legend>
+
+        <div className="form-group">
+          <label htmlFor="nomDeclarant">Déclarant</label>
+          <input
+            type="text"
+            id="nomDeclarant"
+            value={nomDeclarant}
+            onChange={e => setNomDeclarant(e.target.value)}
+            placeholder="Nom et prénom, ou raison sociale"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="vehicule">Véhicule</label>
+          <input
+            type="text"
+            id="vehicule"
+            value={vehicule}
+            onChange={e => setVehicule(e.target.value)}
+            placeholder="Ex: Peugeot 208 - AB-123-CD - 5 CV"
+          />
+        </div>
+      </fieldset>
 
       <fieldset className="bareme-fieldset">
         <legend>Barème kilométrique</legend>

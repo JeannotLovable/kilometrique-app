@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import type { Parametres } from '../types';
 import { exporterVersExcel, importerDepuisExcel, telechargerModele } from '../services/excelService';
+import { genererPdfReleve } from '../services/pdfService';
 import type { Deplacement } from '../types';
 
 interface ToolbarProps {
@@ -57,6 +58,19 @@ export function Toolbar({
     setMessage({ type: 'success', text: 'Export Excel téléchargé' });
   };
 
+  const handleExportPdf = () => {
+    const nbDeplacementsAnnee = deplacements.filter(
+      d => new Date(d.date).getFullYear() === filtreAnnee
+    ).length;
+
+    if (nbDeplacementsAnnee === 0) {
+      setMessage({ type: 'error', text: `Aucun déplacement en ${filtreAnnee} à exporter` });
+      return;
+    }
+    genererPdfReleve(deplacements, parametres, filtreAnnee);
+    setMessage({ type: 'success', text: 'PDF généré — partage-le depuis tes téléchargements' });
+  };
+
   return (
     <div className="toolbar">
       <div className="toolbar-actions">
@@ -73,6 +87,10 @@ export function Toolbar({
 
         <button onClick={handleExport} className="btn-secondary">
           📤 Exporter Excel
+        </button>
+
+        <button onClick={handleExportPdf} className="btn-secondary">
+          🧾 Exporter PDF ({filtreAnnee})
         </button>
 
         <button onClick={telechargerModele} className="btn-link">

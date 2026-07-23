@@ -35,6 +35,10 @@ export interface Parametres {
   anneeFiscale: number;
   /** Barème kilométrique applicable */
   bareme: BaremeKilometrique;
+  /** Nom ou raison sociale du déclarant (affiché sur les exports officiels) */
+  nomDeclarant?: string;
+  /** Véhicule utilisé, ex: "Peugeot 208 - AB-123-CD - 5 CV" */
+  vehicule?: string;
 }
 
 // ============================================
