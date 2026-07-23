@@ -8,7 +8,10 @@
       "Bash(wmic process *)",
       "PowerShell(Get-CimInstance *)",
       "PowerShell(Get-Process *)",
-      "Bash(timeout 15 vercel whoami)"
+      "Bash(timeout 15 vercel whoami)",
+      "Bash(git commit *)",
+      "Bash(git config *)",
+      "Bash(git push *)"
     ]
   }
 }
