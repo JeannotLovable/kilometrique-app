@@ -4,6 +4,14 @@
   gap: 24px;
   padding: 32px 20px 48px;
   text-align: left;
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 20px 14px 32px;
+    gap: 18px;
+  }
 }
 
 .app-header {
@@ -43,6 +51,19 @@
   align-items: center;
 }
 
+@media (max-width: 560px) {
+  .toolbar-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-actions button,
+  .toolbar-actions .btn-link {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .message {
   display: flex;
   align-items: center;
@@ -80,6 +101,21 @@
   gap: 16px;
 }
 
+@media (max-width: 560px) {
+  .filtres {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtres .form-group {
+    width: 100%;
+  }
+
+  .filtres select {
+    width: 100%;
+  }
+}
+
 /* ============ Layout principal ============ */
 
 .app-main {
@@ -87,6 +123,7 @@
   grid-template-columns: 360px 1fr;
   gap: 24px;
   align-items: start;
+  min-width: 0;
 }
 
 @media (max-width: 900px) {
@@ -100,6 +137,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
 }
 
 /* ============ Formulaire ============ */
@@ -114,6 +152,19 @@
   background: var(--bg);
   position: sticky;
   top: 20px;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .deplacement-form {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .deplacement-form {
+    padding: 16px;
+  }
 }
 
 .deplacement-form h3 {
@@ -195,6 +246,16 @@
   margin-top: 4px;
 }
 
+@media (max-width: 480px) {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
 .bareme-fieldset {
   display: flex;
   flex-direction: column;
@@ -272,6 +333,18 @@ button {
   margin-bottom: 16px;
 }
 
+@media (max-width: 560px) {
+  .synthese-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 340px) {
+  .synthese-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -280,6 +353,7 @@ button {
   border-radius: 8px;
   background: var(--code-bg);
   border: 1px solid var(--border);
+  min-width: 0;
 }
 
 .card-label {
