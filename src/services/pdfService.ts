@@ -14,6 +14,24 @@ interface DocAvecAutoTable extends jsPDF {
   lastAutoTable?: { finalY: number };
 }
 
+/**
+ * Les polices standard des PDF (Helvetica) ne savent pas afficher les
+ * espaces fines insécables utilisées par Intl.NumberFormat('fr-FR') pour
+ * séparer les milliers. On les remplace par une espace normale avant
+ * de les insérer dans le document.
+ */
+function pdfSafe(texte: string): string {
+  return texte.replace(new RegExp('[\\u00A0\\u202F\\u2007\\u2009]', 'g'), ' ');
+}
+
+function km(valeur: number): string {
+  return pdfSafe(formaterNombre(valeur));
+}
+
+function euros(valeur: number): string {
+  return pdfSafe(formaterEuros(valeur));
+}
+
 const COULEUR_ACCENT: [number, number, number] = [170, 59, 255];
 const COULEUR_TEXTE: [number, number, number] = [30, 30, 35];
 const COULEUR_GRIS: [number, number, number] = [110, 110, 120];
@@ -93,11 +111,11 @@ export function genererPdfReleve(
     new Date(d.date).toLocaleDateString('fr-FR'),
     d.client,
     d.motif,
-    formaterNombre(d.kmDepart),
-    formaterNombre(d.kmArrivee),
-    formaterNombre(d.kmParcourus),
-    d.peage ? formaterEuros(d.peage) : '—',
-    d.carburant ? formaterEuros(d.carburant) : '—',
+    km(d.kmDepart),
+    km(d.kmArrivee),
+    km(d.kmParcourus),
+    d.peage ? euros(d.peage) : '—',
+    d.carburant ? euros(d.carburant) : '—',
   ]);
 
   autoTable(doc, {
@@ -142,10 +160,10 @@ export function genererPdfReleve(
     styles: { fontSize: 9.5, cellPadding: 3 },
     head: [['Total km', 'Frais (péage + carburant)', 'Indemnité kilométrique', 'Total général']],
     body: [[
-      `${formaterNombre(synthese.totalKm)} km`,
-      formaterEuros(synthese.totalFrais),
-      formaterEuros(synthese.indemniteAnnuelle),
-      formaterEuros(synthese.totalGeneral),
+      `${km(synthese.totalKm)} km`,
+      euros(synthese.totalFrais),
+      euros(synthese.indemniteAnnuelle),
+      euros(synthese.totalGeneral),
     ]],
     headStyles: { fillColor: COULEUR_TEXTE, textColor: 255, fontStyle: 'bold', halign: 'center' },
     bodyStyles: { halign: 'center', fontStyle: 'bold', textColor: COULEUR_TEXTE },
@@ -173,12 +191,12 @@ export function genererPdfReleve(
     styles: { fontSize: 9 },
     head: [['Tranche', 'Mode de calcul']],
     body: [
-      [`Jusqu'à ${formaterNombre(parametres.bareme.seuil1)} km`, `distance × ${parametres.bareme.taux1} €/km`],
+      [`Jusqu'à ${km(parametres.bareme.seuil1)} km`, `distance × ${parametres.bareme.taux1} €/km`],
       [
-        `De ${formaterNombre(parametres.bareme.seuil1)} à ${formaterNombre(parametres.bareme.seuil2)} km`,
-        `(distance × ${parametres.bareme.taux2}) + ${formaterNombre(parametres.bareme.forfait2)} €`,
+        `De ${km(parametres.bareme.seuil1)} à ${km(parametres.bareme.seuil2)} km`,
+        `(distance × ${parametres.bareme.taux2}) + ${km(parametres.bareme.forfait2)} €`,
       ],
-      [`Au-delà de ${formaterNombre(parametres.bareme.seuil2)} km`, `distance × ${parametres.bareme.taux3} €/km`],
+      [`Au-delà de ${km(parametres.bareme.seuil2)} km`, `distance × ${parametres.bareme.taux3} €/km`],
     ],
     headStyles: { fillColor: [230, 228, 235], textColor: COULEUR_TEXTE, fontStyle: 'bold' },
     margin: { left: marge, right: marge },
